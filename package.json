@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
   "description": "A free due-diligence companion for buying land in Ghana: a guided checklist by land type, a property case tracker, and a community fraud-alert board.",
   "scripts": {
     "dev": "vite",
