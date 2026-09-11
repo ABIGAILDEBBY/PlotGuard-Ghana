@@ -14,11 +14,11 @@ function AppShell() {
 
   function navigate(next: View, propertyId?: string) {
     setView(next)
-    if (propertyId) setSelectedPropertyId(propertyId)
+    setSelectedPropertyId(propertyId ?? null)
   }
 
   return (
-    <div className="flex min-h-screen bg-cream text-ink">
+    <div className="flex min-h-screen flex-col bg-cream text-ink lg:flex-row">
       <Sidebar view={view} onNavigate={(v) => navigate(v)} />
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-6 py-8 lg:px-10">

@@ -145,5 +145,5 @@ export function seedState(): AppState {
     },
   ]
 
-  return { properties, alerts }
+  return { properties, alerts, corroboratedIds: [] }
 }

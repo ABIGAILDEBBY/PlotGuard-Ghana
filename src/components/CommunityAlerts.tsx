@@ -16,7 +16,7 @@ export function CommunityAlerts() {
 
   const filtered = useMemo(() => {
     const list = regionFilter ? state.alerts.filter((a) => a.region === regionFilter) : state.alerts
-    return [...list].sort((a, b) => (a.reportedAt < b.reportedAt ? 1 : -1))
+    return [...list].sort((a, b) => (a.reportedAt < b.reportedAt ? 1 : a.reportedAt > b.reportedAt ? -1 : 0))
   }, [state.alerts, regionFilter])
 
   return (
@@ -37,7 +37,9 @@ export function CommunityAlerts() {
       <div className="rounded-lg border border-gold-600/40 bg-gold-100/60 p-4 text-sm text-ink">
         <strong className="font-display font-semibold text-forest-800">These are unverified reports, not legal findings.</strong>{" "}
         Anyone can submit one. Use them as a reason to dig deeper, not as proof of fraud — always complete your own
-        checklist and independent verification before deciding.
+        checklist and independent verification before deciding. Reports you add are saved{" "}
+        <strong className="font-semibold">only on this device</strong> — they aren't automatically shared with other
+        users. To pool reports with family or a trusted group, export your data (in the sidebar) and have them import it.
       </div>
 
       <div className="flex items-center gap-2">
@@ -65,28 +67,37 @@ export function CommunityAlerts() {
         </SectionCard>
       ) : (
         <div className="space-y-3">
-          {filtered.map((a) => (
-            <SectionCard key={a.id}>
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-display font-semibold text-forest-800">{a.sellerDescription}</p>
-                    <Badge tone="clay">{concernLabel(a.concernType)}</Badge>
+          {filtered.map((a) => {
+            const alreadyConfirmed = state.corroboratedIds.includes(a.id)
+            return (
+              <SectionCard key={a.id}>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-display font-semibold text-forest-800">{a.sellerDescription}</p>
+                      <Badge tone="clay">{concernLabel(a.concernType)}</Badge>
+                    </div>
+                    <p className="mt-1 text-xs text-ink-soft">
+                      {a.town}, {a.region} · reported {a.reportedAt}
+                    </p>
+                    <p className="mt-2 text-sm text-ink">{a.description}</p>
                   </div>
-                  <p className="mt-1 text-xs text-ink-soft">
-                    {a.town}, {a.region} · reported {a.reportedAt}
-                  </p>
-                  <p className="mt-2 text-sm text-ink">{a.description}</p>
+                  <button
+                    onClick={() => corroborateAlert(a.id)}
+                    disabled={alreadyConfirmed}
+                    title={alreadyConfirmed ? "You've already confirmed this report" : "Confirm you've seen this too"}
+                    className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium ${
+                      alreadyConfirmed
+                        ? "cursor-default border-forest-100 bg-forest-100 text-forest-700"
+                        : "border-parchment text-ink-soft hover:border-forest-600 hover:text-forest-700"
+                    }`}
+                  >
+                    {alreadyConfirmed ? "✓ Confirmed" : "I've seen this too"} ({a.corroborations})
+                  </button>
                 </div>
-                <button
-                  onClick={() => corroborateAlert(a.id)}
-                  className="shrink-0 rounded-md border border-parchment px-3 py-1.5 text-xs font-medium text-ink-soft hover:border-forest-600 hover:text-forest-700"
-                >
-                  I've seen this too ({a.corroborations})
-                </button>
-              </div>
-            </SectionCard>
-          ))}
+              </SectionCard>
+            )
+          })}
         </div>
       )}
 
@@ -115,6 +126,7 @@ function ReportModal({ onClose }: { onClose: () => void }) {
       <p className="mb-4 text-xs text-ink-soft">
         Describe what you observed factually. Avoid naming private individuals directly — describe the seller by
         role or nickname (e.g. "agent going by Kofi") so this stays a useful, fair warning rather than an accusation.
+        This saves to your device only — export your data to share it with others.
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">

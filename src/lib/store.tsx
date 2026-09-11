@@ -76,10 +76,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return alert
       },
       corroborateAlert: (id) => {
-        setState((s) => ({
-          ...s,
-          alerts: s.alerts.map((a) => (a.id === id ? { ...a, corroborations: a.corroborations + 1 } : a)),
-        }))
+        setState((s) => {
+          if (s.corroboratedIds.includes(id)) return s
+          return {
+            ...s,
+            corroboratedIds: [...s.corroboratedIds, id],
+            alerts: s.alerts.map((a) => (a.id === id ? { ...a, corroborations: a.corroborations + 1 } : a)),
+          }
+        })
       },
       replaceState: (s) => setState(s),
     }

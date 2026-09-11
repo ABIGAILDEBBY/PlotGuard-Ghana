@@ -1,3 +1,4 @@
+import { useEffect, useId, useRef } from "react"
 import type { ReactNode } from "react"
 
 export const inputClass =
@@ -5,15 +6,62 @@ export const inputClass =
 
 export const labelClass = "mb-1 block text-xs font-medium text-ink-soft"
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+
 export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+  const titleId = useId()
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    const panel = panelRef.current
+    const firstField = panel?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+    ;(firstField ?? panel)?.focus()
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose()
+        return
+      }
+      if (e.key === "Tab" && panel) {
+        const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      previouslyFocused?.focus()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 px-4" onClick={onClose}>
       <div
-        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-parchment bg-cream p-6 shadow-xl"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-parchment bg-cream p-6 shadow-xl outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-forest-800">{title}</h2>
+          <h2 id={titleId} className="font-display text-lg font-semibold text-forest-800">
+            {title}
+          </h2>
           <button onClick={onClose} className="text-ink-soft hover:text-ink" aria-label="Close">
             ✕
           </button>

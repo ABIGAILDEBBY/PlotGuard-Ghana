@@ -8,8 +8,8 @@ export function loadState(): AppState {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return seedState()
     const parsed = JSON.parse(raw) as Partial<AppState>
-    if (!parsed.properties || !parsed.alerts) return seedState()
-    return parsed as AppState
+    if (!Array.isArray(parsed.properties) || !Array.isArray(parsed.alerts)) return seedState()
+    return { properties: parsed.properties, alerts: parsed.alerts, corroboratedIds: Array.isArray(parsed.corroboratedIds) ? parsed.corroboratedIds : [] }
   } catch {
     return seedState()
   }

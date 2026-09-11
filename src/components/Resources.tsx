@@ -1,7 +1,7 @@
 import { GLOSSARY, RED_FLAGS } from "../lib/helpers"
 import { SectionCard } from "./ui"
 
-const OFFICIAL_STEPS = [
+const KEY_STEPS = [
   {
     title: "Search the title",
     body:
@@ -10,7 +10,7 @@ const OFFICIAL_STEPS = [
   {
     title: "Check for stool or family involvement",
     body:
-      "If the land is stool/skin land, confirm the allocation with the Office of the Administrator of Stool Lands (OASL). If it's family land, get consent in writing from the family head and the principal elders — not one relative alone.",
+      "If the land is stool/skin land, start with the traditional authority (the chief's palace or local Customary Land Secretariat) and confirm recognition with OASL or the regional Lands Commission. If it's family land, get consent in writing from the family head and the principal elders — not one relative alone.",
   },
   {
     title: "Verify on the ground",
@@ -28,15 +28,16 @@ export function Resources() {
     <div className="space-y-8">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wider text-clay-600">Resources</p>
-        <h1 className="mt-1 font-display text-2xl font-semibold text-forest-800">The official process, in plain language.</h1>
+        <h1 className="mt-1 font-display text-2xl font-semibold text-forest-800">Key steps, in plain language.</h1>
         <p className="mt-2 max-w-2xl text-sm text-ink-soft">
-          PlotGuard helps you organise your own first-pass checks. It is not a law firm or a licensed surveyor —
-          for anything serious, use it alongside the professionals below, not instead of them.
+          This is general guidance to orient you, not an exhaustive or authoritative legal process — requirements can
+          vary by case. PlotGuard is not a law firm or a licensed surveyor; for anything serious, use it alongside the
+          professionals below, not instead of them.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {OFFICIAL_STEPS.map((step) => (
+        {KEY_STEPS.map((step) => (
           <SectionCard key={step.title} title={step.title}>
             <p className="text-sm text-ink-soft">{step.body}</p>
           </SectionCard>

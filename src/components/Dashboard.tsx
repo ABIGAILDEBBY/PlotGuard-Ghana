@@ -27,7 +27,12 @@ function concernLabel(key: string) {
 export function Dashboard({ onNavigate }: { onNavigate: (v: View, propertyId?: string) => void }) {
   const { state } = useStore()
   const active = state.properties.filter((p) => p.status !== "purchased" && p.status !== "abandoned")
-  const recentAlerts = [...state.alerts].sort((a, b) => (a.reportedAt < b.reportedAt ? 1 : -1)).slice(0, 4)
+  const myRegions = new Set(state.properties.map((p) => p.region))
+  const relevantAlerts = myRegions.size > 0 ? state.alerts.filter((a) => myRegions.has(a.region)) : state.alerts
+  const alertPool = relevantAlerts.length > 0 ? relevantAlerts : state.alerts
+  const recentAlerts = [...alertPool]
+    .sort((a, b) => (a.reportedAt < b.reportedAt ? 1 : a.reportedAt > b.reportedAt ? -1 : 0))
+    .slice(0, 4)
 
   return (
     <div className="space-y-8">

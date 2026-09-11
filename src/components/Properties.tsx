@@ -34,12 +34,15 @@ export function Properties({
   const [creating, setCreating] = useState(false)
 
   useEffect(() => {
-    if (initialSelectedId) setSelectedId(initialSelectedId)
+    setSelectedId(initialSelectedId)
   }, [initialSelectedId])
 
   useEffect(() => {
-    if (!selectedId && state.properties.length > 0) setSelectedId(state.properties[0].id)
-  }, [selectedId, state.properties])
+    const stillExists = selectedId != null && state.properties.some((p) => p.id === selectedId)
+    if (!stillExists && state.properties.length > 0) {
+      onSelect(state.properties[0].id)
+    }
+  }, [selectedId, state.properties, onSelect])
 
   function select(id: string) {
     setSelectedId(id)
@@ -105,6 +108,7 @@ export function Properties({
                   if (window.confirm("Delete this property?")) {
                     deleteProperty(selected.id)
                     setSelectedId(null)
+                    onSelect(null)
                   }
                 }}
                 onToggleChecklist={(itemId) => toggleChecklistItem(selected.id, itemId)}

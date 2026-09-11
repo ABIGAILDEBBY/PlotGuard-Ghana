@@ -8,7 +8,7 @@ const COMMON_CHECKLIST_STEPS: string[] = [
   "Get the seller's full name and Ghana Card ID, and confirm it matches their documents",
   "Request ORIGINAL documents — site plan and indenture, plus land title certificate if one exists (not photocopies)",
   "Search the title at the Lands Commission (Land Registration Division) covering the region",
-  "Confirm the GhanaPostGPS digital address matches the boundaries you were shown on site",
+  "Confirm the GhanaPostGPS digital address matches the site you were shown (it confirms the location, not the boundaries — a surveyor confirms those)",
   "Visit the site in person and ask at least two neighbours who they know as the owner",
   "Hire a licensed surveyor to confirm the boundary pillars match the site plan",
   "Have a lawyer review every document before any money changes hands",
@@ -19,8 +19,8 @@ const LAND_TYPE_STEPS: Record<LandType, string[]> = {
     "Confirm with the Lands Commission whether the land is still under compulsory acquisition or has been officially released",
   ],
   "Stool/Skin": [
-    "Confirm the allocation is recognised by the Office of the Administrator of Stool Lands (OASL)",
-    "Get concurrence from the stool/skin itself — not just one person claiming to act for the chief",
+    "Confirm the allocation with the traditional authority itself — the chief's palace or local Customary Land Secretariat if one exists — not just one person claiming to act for the chief",
+    "Check the allocation is recognised by the Office of the Administrator of Stool Lands (OASL) or the regional Lands Commission",
   ],
   "Family": [
     "Get written consent from the family head AND the principal elders — not one relative alone",
@@ -52,6 +52,7 @@ export const GLOSSARY: GlossaryTerm[] = [
   { term: "Stool / Skin land", definition: "Land held in trust by a chief (stool in the south, skin in the north) on behalf of a community." },
   { term: "Family land", definition: "Land owned collectively by a family, requiring consent from the family head and principal elders to sell." },
   { term: "OASL", definition: "Office of the Administrator of Stool Lands — oversees revenue and allocation for stool and skin lands." },
+  { term: "Customary Land Secretariat", definition: "A local office set up under a traditional authority to record and formalise customary land transactions alongside the formal land system." },
   { term: "GhanaPostGPS", definition: "Ghana's national digital addressing system; every location has a unique GPS-based address code." },
   { term: "Caveat", definition: "A formal notice lodged at the Lands Commission warning that a title is disputed or has a competing claim." },
   { term: "Land guard", definition: "An informal, often armed group enforcing a claim to land outside the formal legal system — criminalised under the Land Act, 2020 (Act 1036)." },

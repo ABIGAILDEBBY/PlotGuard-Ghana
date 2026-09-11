@@ -91,4 +91,5 @@ export interface GlossaryTerm {
 export interface AppState {
   properties: PropertyCase[]
   alerts: CommunityAlert[]
+  corroboratedIds: string[]
 }

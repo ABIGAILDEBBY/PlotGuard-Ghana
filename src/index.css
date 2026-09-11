@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Zilla Slab", ui-serif, Georgia, serif;
+  --font-display: "Zilla Slab", ui-serif, georgia, serif;
   --font-body: "Work Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-cream: #faf6ee;
