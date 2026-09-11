@@ -15,6 +15,10 @@
 
 [**⭐ Star this repo**](https://github.com/ABIGAILDEBBY/PlotGuard-Ghana) &nbsp;·&nbsp; [**🐛 Report an issue**](https://github.com/ABIGAILDEBBY/PlotGuard-Ghana/issues) &nbsp;·&nbsp; [**⚠️ Read the disclaimer**](#disclaimer)
 
+<br/>
+
+![PlotGuard Ghana dashboard](docs/screenshot-dashboard.png)
+
 </div>
 
 ---
@@ -28,8 +32,6 @@ A few paid verification services have started to appear, but there is very littl
 PlotGuard is that first pass. It organizes the checks you should run, tracks every plot you are considering in one place, and surfaces warnings other buyers have already raised, all before you commit any money.
 
 It is not a law firm, a licensed surveyor, or the Lands Commission. See the [disclaimer](#disclaimer).
-
----
 
 ## Quick setup
 
@@ -55,8 +57,6 @@ npm run preview
 ```
 
 No account, no API key, and no backend to configure. Everything runs in your browser.
-
----
 
 ## Features
 
@@ -92,29 +92,32 @@ No account, no API key, and no backend to configure. Everything runs in your bro
   </tbody>
 </table>
 
----
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshot-properties.png" alt="Property detail with an adaptive due diligence checklist"/><br/><sub align="center">A checklist that adapts to land type, with your own notes attached</sub></td>
+    <td width="50%"><img src="docs/screenshot-alerts.png" alt="Community alerts board"/><br/><sub align="center">Search a seller or area before you go any further</sub></td>
+  </tr>
+</table>
 
 ## How it works
 
 ```text
 For every plot you are considering:
 
-1. Log the property      Nickname, region, seller, price, land type, GhanaPostGPS
-                          takes under a minute, and nothing gets lost between conversations
+1. Log the property       Nickname, region, seller, price, land type, GhanaPostGPS
+                           takes under a minute, and nothing gets lost between conversations
 
-2. Work the checklist     Steps adapt automatically to State, Stool/Skin, Family, or Private title
-                          covers the Lands Commission search, consent, and surveyor verification
+2. Work the checklist      Steps adapt automatically to State, Stool/Skin, Family, or Private title
+                           covers the Lands Commission search, consent, and surveyor verification
 
-3. Check community alerts Search the region and seller before you go further
-                          unverified, but a strong reason to slow down if something matches
+3. Check community alerts  Search the region and seller before you go further
+                           unverified, but a strong reason to slow down if something matches
 
-4. Get professional review  A lawyer and a licensed surveyor, before any money changes hands
-                          PlotGuard organizes your case; it does not replace their sign off
+4. Get professional review A lawyer and a licensed surveyor, before any money changes hands
+                           PlotGuard organizes your case; it does not replace their sign off
 ```
 
 > The most common mistake is skipping straight to a deposit because a plot "feels right." A clean feeling is not a clean title.
-
----
 
 ## Folder structure
 
@@ -144,19 +147,16 @@ PlotGuard-Ghana/
 │   └── data/
 │       └── seed.ts                example properties and alerts (no real people or places)
 │
+├── docs/                          README screenshots
 ├── LICENSE
 └── README.md
 ```
-
----
 
 ## Data and privacy
 
 Everything lives in your browser's `localStorage`. Nothing is sent to a server, and there is no account to create. Use the **Export data** and **Import data** buttons in the sidebar to back your data up or move it to another browser.
 
 Community Alerts you submit are saved only on your device; they are not automatically shared with other users. To pool reports with family or a trusted group, export your data and have them import it.
-
----
 
 ## Who this is for
 
@@ -165,19 +165,13 @@ Community Alerts you submit are saved only on your device; they are not automati
 - Families or small groups who want to pool what they have each found on a seller or an area
 - Anyone who wants to understand the real verification process before calling a lawyer
 
----
-
 ## Disclaimer
 
 PlotGuard is a self help organizing tool, not legal advice. It does not replace a lawyer, a licensed surveyor, or an official search at the Lands Commission. Community Alerts are unverified, user submitted reports, not legal findings or proof of fraud. Always complete independent, professional verification before paying for land.
 
----
-
 ## Contributing
 
 Issues and pull requests are welcome. If you know the land verification process better than the checklist currently reflects, that is exactly the kind of correction this project needs. Keep changes focused, and run `npm run build` before submitting.
-
----
 
 ## License
 
