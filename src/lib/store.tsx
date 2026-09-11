@@ -1,22 +1,17 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import type { ReactNode } from 'react'
-import type { AppState, Video, Idea, Sponsorship, GearItem } from '../types'
-import { loadState, saveState } from './storage'
-import { makeId, defaultChecklist } from './helpers'
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import type { ReactNode } from "react"
+import type { AppState, PropertyCase, CommunityAlert } from "../types"
+import { loadState, saveState } from "./storage"
+import { makeId, buildChecklist } from "./helpers"
 
 interface StoreValue {
   state: AppState
-  addVideo: (v: Omit<Video, 'id' | 'createdAt' | 'updatedAt'>) => Video
-  updateVideo: (id: string, patch: Partial<Video>) => void
-  deleteVideo: (id: string) => void
-  addIdea: (i: Omit<Idea, 'id' | 'createdAt'>) => Idea
-  deleteIdea: (id: string) => void
-  promoteIdea: (ideaId: string) => Video | null
-  addSponsorship: (s: Omit<Sponsorship, 'id'>) => Sponsorship
-  updateSponsorship: (id: string, patch: Partial<Sponsorship>) => void
-  deleteSponsorship: (id: string) => void
-  addGear: (g: Omit<GearItem, 'id'>) => GearItem
-  deleteGear: (id: string) => void
+  addProperty: (p: Omit<PropertyCase, "id" | "checklist" | "createdAt" | "updatedAt">) => PropertyCase
+  updateProperty: (id: string, patch: Partial<PropertyCase>) => void
+  deleteProperty: (id: string) => void
+  toggleChecklistItem: (propertyId: string, itemId: string) => void
+  addAlert: (a: Omit<CommunityAlert, "id" | "corroborations" | "reportedAt">) => CommunityAlert
+  corroborateAlert: (id: string) => void
   replaceState: (s: AppState) => void
 }
 
@@ -34,77 +29,57 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     return {
       state,
-      addVideo: (v) => {
-        const video: Video = { ...v, id: makeId('vid'), createdAt: now(), updatedAt: now() }
-        setState((s) => ({ ...s, videos: [video, ...s.videos] }))
-        return video
+      addProperty: (p) => {
+        const property: PropertyCase = {
+          ...p,
+          id: makeId("prop"),
+          checklist: buildChecklist(p.landType),
+          createdAt: now(),
+          updatedAt: now(),
+        }
+        setState((s) => ({ ...s, properties: [property, ...s.properties] }))
+        return property
       },
-      updateVideo: (id, patch) => {
+      updateProperty: (id, patch) => {
         setState((s) => ({
           ...s,
-          videos: s.videos.map((v) => (v.id === id ? { ...v, ...patch, updatedAt: now() } : v)),
+          properties: s.properties.map((p) => {
+            if (p.id !== id) return p
+            const next = { ...p, ...patch, updatedAt: now() }
+            if (patch.landType && patch.landType !== p.landType) {
+              next.checklist = buildChecklist(patch.landType)
+            }
+            return next
+          }),
         }))
       },
-      deleteVideo: (id) => {
-        setState((s) => ({ ...s, videos: s.videos.filter((v) => v.id !== id) }))
+      deleteProperty: (id) => {
+        setState((s) => ({ ...s, properties: s.properties.filter((p) => p.id !== id) }))
       },
-      addIdea: (i) => {
-        const idea: Idea = { ...i, id: makeId('idea'), createdAt: now() }
-        setState((s) => ({ ...s, ideas: [idea, ...s.ideas] }))
-        return idea
-      },
-      deleteIdea: (id) => {
-        setState((s) => ({ ...s, ideas: s.ideas.filter((i) => i.id !== id) }))
-      },
-      promoteIdea: (ideaId) => {
-        let created: Video | null = null
-        setState((s) => {
-          const idea = s.ideas.find((i) => i.id === ideaId)
-          if (!idea) return s
-          const video: Video = {
-            id: makeId('vid'),
-            title: idea.title,
-            format: 'Tutorial',
-            stage: 'scripting',
-            publishDate: null,
-            tags: idea.tags,
-            notes: idea.notes,
-            scriptUrl: '',
-            checklist: defaultChecklist(),
-            stats: null,
-            createdAt: now(),
-            updatedAt: now(),
-          }
-          created = video
-          return {
-            ...s,
-            videos: [video, ...s.videos],
-            ideas: s.ideas.filter((i) => i.id !== ideaId),
-          }
-        })
-        return created
-      },
-      addSponsorship: (sp) => {
-        const sponsorship: Sponsorship = { ...sp, id: makeId('spon') }
-        setState((s) => ({ ...s, sponsorships: [sponsorship, ...s.sponsorships] }))
-        return sponsorship
-      },
-      updateSponsorship: (id, patch) => {
+      toggleChecklistItem: (propertyId, itemId) => {
         setState((s) => ({
           ...s,
-          sponsorships: s.sponsorships.map((sp) => (sp.id === id ? { ...sp, ...patch } : sp)),
+          properties: s.properties.map((p) =>
+            p.id !== propertyId
+              ? p
+              : {
+                  ...p,
+                  updatedAt: now(),
+                  checklist: p.checklist.map((c) => (c.id === itemId ? { ...c, done: !c.done } : c)),
+                },
+          ),
         }))
       },
-      deleteSponsorship: (id) => {
-        setState((s) => ({ ...s, sponsorships: s.sponsorships.filter((sp) => sp.id !== id) }))
+      addAlert: (a) => {
+        const alert: CommunityAlert = { ...a, id: makeId("alert"), corroborations: 0, reportedAt: now().slice(0, 10) }
+        setState((s) => ({ ...s, alerts: [alert, ...s.alerts] }))
+        return alert
       },
-      addGear: (g) => {
-        const gear: GearItem = { ...g, id: makeId('gear') }
-        setState((s) => ({ ...s, gear: [gear, ...s.gear] }))
-        return gear
-      },
-      deleteGear: (id) => {
-        setState((s) => ({ ...s, gear: s.gear.filter((g) => g.id !== id) }))
+      corroborateAlert: (id) => {
+        setState((s) => ({
+          ...s,
+          alerts: s.alerts.map((a) => (a.id === id ? { ...a, corroborations: a.corroborations + 1 } : a)),
+        }))
       },
       replaceState: (s) => setState(s),
     }
@@ -115,6 +90,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
 export function useStore() {
   const ctx = useContext(StoreContext)
-  if (!ctx) throw new Error('useStore must be used within StoreProvider')
+  if (!ctx) throw new Error("useStore must be used within StoreProvider")
   return ctx
 }

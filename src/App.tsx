@@ -1,29 +1,33 @@
-import { useState } from 'react'
-import { StoreProvider } from './lib/store'
-import { Sidebar } from './components/Sidebar'
-import { Dashboard } from './components/Dashboard'
-import { Pipeline } from './components/Pipeline'
-import { Ideas } from './components/Ideas'
-import { Calendar } from './components/Calendar'
-import { Sponsorships } from './components/Sponsorships'
-import { Gear } from './components/Gear'
+import { useState } from "react"
+import { StoreProvider } from "./lib/store"
+import { Sidebar } from "./components/Sidebar"
+import { Dashboard } from "./components/Dashboard"
+import { Properties } from "./components/Properties"
+import { CommunityAlerts } from "./components/CommunityAlerts"
+import { Resources } from "./components/Resources"
 
-export type View = 'dashboard' | 'pipeline' | 'ideas' | 'calendar' | 'sponsorships' | 'gear'
+export type View = "dashboard" | "properties" | "alerts" | "resources"
 
 function AppShell() {
-  const [view, setView] = useState<View>('dashboard')
+  const [view, setView] = useState<View>("dashboard")
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+
+  function navigate(next: View, propertyId?: string) {
+    setView(next)
+    if (propertyId) setSelectedPropertyId(propertyId)
+  }
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100">
-      <Sidebar view={view} onNavigate={setView} />
+    <div className="flex min-h-screen bg-cream text-ink">
+      <Sidebar view={view} onNavigate={(v) => navigate(v)} />
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-6 py-8 lg:px-10">
-          {view === 'dashboard' && <Dashboard onNavigate={setView} />}
-          {view === 'pipeline' && <Pipeline />}
-          {view === 'ideas' && <Ideas />}
-          {view === 'calendar' && <Calendar />}
-          {view === 'sponsorships' && <Sponsorships />}
-          {view === 'gear' && <Gear />}
+          {view === "dashboard" && <Dashboard onNavigate={navigate} />}
+          {view === "properties" && (
+            <Properties initialSelectedId={selectedPropertyId} onSelect={setSelectedPropertyId} />
+          )}
+          {view === "alerts" && <CommunityAlerts />}
+          {view === "resources" && <Resources />}
         </div>
       </main>
     </div>

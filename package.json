@@ -1,9 +1,9 @@
 {
-  "name": "techartgenius-studio-hub",
+  "name": "plotguard-ghana",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Practical content-ops hub for the TechArtGenius channel: ideas, production pipeline, publishing calendar, sponsorships, and gear tracking.",
+  "description": "A free due-diligence companion for buying land in Ghana: a guided checklist by land type, a property case tracker, and a community fraud-alert board.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

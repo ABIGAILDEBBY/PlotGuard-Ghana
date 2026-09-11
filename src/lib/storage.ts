@@ -1,16 +1,14 @@
-import type { AppState } from '../types'
-import { seedState } from '../data/seed'
+import type { AppState } from "../types"
+import { seedState } from "../data/seed"
 
-const STORAGE_KEY = 'tag-studio-hub:v1'
+const STORAGE_KEY = "plotguard-gh:v1"
 
 export function loadState(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return seedState()
     const parsed = JSON.parse(raw) as Partial<AppState>
-    if (!parsed.videos || !parsed.ideas || !parsed.sponsorships || !parsed.gear) {
-      return seedState()
-    }
+    if (!parsed.properties || !parsed.alerts) return seedState()
     return parsed as AppState
   } catch {
     return seedState()

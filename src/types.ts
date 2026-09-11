@@ -1,17 +1,35 @@
-export type Stage = 'idea' | 'scripting' | 'filming' | 'editing' | 'scheduled' | 'published'
+export type LandType = "State" | "Stool/Skin" | "Family" | "Private/Freehold"
 
-export const STAGES: { key: Stage; label: string }[] = [
-  { key: 'idea', label: 'Idea' },
-  { key: 'scripting', label: 'Scripting' },
-  { key: 'filming', label: 'Filming' },
-  { key: 'editing', label: 'Editing' },
-  { key: 'scheduled', label: 'Scheduled' },
-  { key: 'published', label: 'Published' },
+export const LAND_TYPES: LandType[] = ["State", "Stool/Skin", "Family", "Private/Freehold"]
+
+export type CaseStatus = "researching" | "verifying" | "in-progress" | "purchased" | "abandoned"
+
+export const CASE_STATUSES: { key: CaseStatus; label: string }[] = [
+  { key: "researching", label: "Researching" },
+  { key: "verifying", label: "Verifying" },
+  { key: "in-progress", label: "In progress" },
+  { key: "purchased", label: "Purchased" },
+  { key: "abandoned", label: "Walked away" },
 ]
 
-export type Format = 'Tutorial' | 'Review' | 'Short' | 'Deep Dive' | 'Opinion'
-
-export const FORMATS: Format[] = ['Tutorial', 'Review', 'Short', 'Deep Dive', 'Opinion']
+export const GHANA_REGIONS: string[] = [
+  "Greater Accra",
+  "Ashanti",
+  "Western",
+  "Western North",
+  "Central",
+  "Eastern",
+  "Volta",
+  "Oti",
+  "Northern",
+  "Savannah",
+  "North East",
+  "Upper East",
+  "Upper West",
+  "Bono",
+  "Bono East",
+  "Ahafo",
+]
 
 export interface ChecklistItem {
   id: string
@@ -19,71 +37,58 @@ export interface ChecklistItem {
   done: boolean
 }
 
-export interface VideoStats {
-  views: number
-  likes: number
-  comments: number
-  watchTimeMinutes: number
-  updatedAt: string
-}
-
-export interface Video {
+export interface PropertyCase {
   id: string
-  title: string
-  format: Format
-  stage: Stage
-  publishDate: string | null
-  tags: string[]
+  nickname: string
+  region: string
+  town: string
+  landType: LandType
+  sellerName: string
+  sellerContact: string
+  askingPriceGHS: number | null
+  sizePlots: string
+  ghanaPostGPS: string
+  status: CaseStatus
   notes: string
-  scriptUrl: string
   checklist: ChecklistItem[]
-  stats: VideoStats | null
   createdAt: string
   updatedAt: string
 }
 
-export type Priority = 'low' | 'medium' | 'high'
+export type ConcernType =
+  | "multiple-sale"
+  | "no-original-documents"
+  | "disputed-family-claim"
+  | "land-guard-activity"
+  | "price-too-good"
+  | "other"
 
-export interface Idea {
+export const CONCERN_TYPES: { key: ConcernType; label: string }[] = [
+  { key: "multiple-sale", label: "Sold to more than one buyer" },
+  { key: "no-original-documents", label: "No original documents" },
+  { key: "disputed-family-claim", label: "Disputed family/stool claim" },
+  { key: "land-guard-activity", label: "Land guard activity" },
+  { key: "price-too-good", label: "Price far below market" },
+  { key: "other", label: "Other concern" },
+]
+
+export interface CommunityAlert {
   id: string
-  title: string
-  notes: string
-  tags: string[]
-  priority: Priority
-  createdAt: string
+  region: string
+  town: string
+  sellerDescription: string
+  concernType: ConcernType
+  description: string
+  corroborations: number
+  reportedAt: string
 }
 
-export type PaymentStatus = 'pending' | 'invoiced' | 'paid'
-
-export interface Sponsorship {
-  id: string
-  sponsor: string
-  videoId: string | null
-  deliverables: string[]
-  deadline: string | null
-  amount: number | null
-  paymentStatus: PaymentStatus
-  disclosureRequired: boolean
-  notes: string
-}
-
-export type GearCategory = 'Hardware' | 'Software' | 'App/Tool' | 'Accessory'
-
-export const GEAR_CATEGORIES: GearCategory[] = ['Hardware', 'Software', 'App/Tool', 'Accessory']
-
-export interface GearItem {
-  id: string
-  name: string
-  category: GearCategory
-  usedInVideoIds: string[]
-  affiliateLink: string
-  notes: string
-  featured: boolean
+export interface GlossaryTerm {
+  term: string
+  definition: string
 }
 
 export interface AppState {
-  videos: Video[]
-  ideas: Idea[]
-  sponsorships: Sponsorship[]
-  gear: GearItem[]
+  properties: PropertyCase[]
+  alerts: CommunityAlert[]
 }
